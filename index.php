@@ -8,7 +8,7 @@
     	$message = strip_tags($_REQUEST['message']);
     	$attachment = chunk_split(base64_encode(file_get_contents($_FILES['file']['tmp_name'])));
     	$filename = $_FILES['file']['name'];
-    	$boundary =md5(date('r', time())); 
+    	$boundary =md5(date('r', time()));
     	$headers = "From: ".$_REQUEST['email'];
     	$headers .= "\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"_1_$boundary\"";
     	$message="This is a multi-part message in MIME format.
@@ -24,9 +24,9 @@ $message
 
 --_2_$boundary--
 --_1_$boundary
-Content-Type: application/octet-stream; name=\"$filename\" 
-Content-Transfer-Encoding: base64 
-Content-Disposition: attachment 
+Content-Type: application/octet-stream; name=\"$filename\"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment
 
 $attachment
 --_1_$boundary--";
@@ -55,8 +55,7 @@ window.open("info.html","¿Que es la ficha tecnica?","width=400,height=400,menub
 </script>
 <?php echo $output; ?>
 <center>
-<?php echo $_SERVER['PHP_SELF'];?>
-<form name="formulario"  enctype="multipart/form-data"  action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" <?php echo $flags;?>> 
+<form name="formulario"  enctype="multipart/form-data"  action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" <?php echo $flags;?>>
     <table  border="0" cellpadding="5" cellspacing="5">
                <tr>
         <th><label for="name">*Nombre: </label></th>
