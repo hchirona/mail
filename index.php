@@ -1,17 +1,28 @@
 <?php
-    if(isset($_REQUEST['submit']))
+
+    if($_SERVER["REQUEST_METHOD"] === "POST")
     {
-    	$output = '<h1>Tu solicitud sera procesada en un plazo de 24 horas.</h1>';
-    	$flags = 'style="display:none;"';
-    	$to = 'null@null.com';
-    	$subject = 'Presupuesto: '.$_REQUEST['nombre'];
-    	$message = strip_tags($_REQUEST['message']);
-    	$attachment = chunk_split(base64_encode(file_get_contents($_FILES['file']['tmp_name'])));
-    	$filename = $_FILES['file']['name'];
-    	$boundary =md5(date('r', time()));
-    	$headers = "From: ".$_REQUEST['email'];
-    	$headers .= "\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"_1_$boundary\"";
-    	$message="This is a multi-part message in MIME format.
+        //form submitted
+
+        //check if other form details are correct
+
+        //verify captcha
+        $recaptcha_secret = "CLAVE SECRETA GOOGLE RECAPTCHA";
+        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
+        $response = json_decode($response, true);
+        if($response["success"] === true)
+        {
+            $output = '<h1>Tu solicitud sera procesada en un plazo de 24 horas.</h1>';
+            $flags = 'style="display:none;"';
+            $to = 'hectorchirona@gmail.com';
+            $subject = 'Presupuesto: '.$_REQUEST['nombre'];
+            $message = strip_tags($_REQUEST['message']);
+            $attachment = chunk_split(base64_encode(file_get_contents($_FILES['file']['tmp_name'])));
+            $filename = $_FILES['file']['name'];
+            $boundary =md5(date('r', time()));
+            $headers = "From: ".$_REQUEST['email'];
+            $headers .= "\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"_1_$boundary\"";
+            $message="This is a multi-part message in MIME format.
 
 --_1_$boundary
 Content-Type: multipart/alternative; boundary=\"_2_$boundary\"
@@ -31,7 +42,19 @@ Content-Disposition: attachment
 $attachment
 --_1_$boundary--";
 
-    	mail($to, $subject, $message, $headers);
+        mail($to, $subject, $message, $headers);
+
+        }
+        else
+        {
+            echo "¿Eres un robot?";
+        }
+    }
+
+
+    if(isset($_REQUEST['submit']))
+    {
+
     }
 ?>
 <html>
@@ -44,6 +67,7 @@ th{ background:#999999; text-align:left; vertical-align:top;}
 input{ width:180px;}
 label{ width:200px;}
 </style>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body>
@@ -76,7 +100,8 @@ window.open("info.html","¿Que es la ficha tecnica?","width=400,height=400,menub
  <tr>
         <td style="text-align:left;" ><input type=button value="¿Que es la ficha tecnica?" onclick="popup()"></td>
         <td colspan="2" style="text-align:left;"><input type="submit" name="submit" id="submit" value="Enviar"></td>
- </tr>
+ </tr><tr><td></td><td>
+ <div class="g-recaptcha" data-sitekey="CLAVE DE SITIO GOOGLE RECAPTCHA"></div></td></tr>
 </form>
 </center>
 </body>
