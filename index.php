@@ -14,7 +14,7 @@
         {
             $output = '<h1>Tu solicitud sera procesada en un plazo de 24 horas.</h1>';
             $flags = 'style="display:none;"';
-            $to = 'hectorchirona@gmail.com';
+            $to = 'null@null.null';
             $subject = 'Presupuesto: '.$_REQUEST['nombre'];
             $message = strip_tags($_REQUEST['message']);
             $attachment = chunk_split(base64_encode(file_get_contents($_FILES['file']['tmp_name'])));
